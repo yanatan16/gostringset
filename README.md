@@ -18,7 +18,7 @@ package stringset
 type Set map[string]bool
     Set contains a set of strings.
 
-func New(elements ...string) Set
+func New(elements ...string) Set 
     Create a new Set.
 
 func (s Set) Add(elements ...string)
