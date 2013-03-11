@@ -5,25 +5,54 @@ package stringset
 type Set map[string]bool
 
 // Create a new Set.
-func New() Set {
-  s := make(map[string]bool)
+func New(elements...string) Set {
+  s := make(Set)
+  s.Add(elements...)
   return s
 }
 
-// Add a value to a set.
-func (s Set) Add(v string) {
-  s[v] = true
+// Add elements to a set.
+func (s Set) Add(elements ...string) {
+  for _, v := range elements {
+    s[v] = true
+  }
 }
 
-// Remove a value from a set.
-func (s Set) Remove(v string) {
-  delete(s, v)
+// Remove elements from a set.
+func (s Set) Remove(elements ...string) {
+  for _, v := range elements {
+    delete(s, v)
+  }
 }
 
-// Test whether a value is in a set.
-func (s Set) In(v string) bool {
-  _, ok := s[v]
-  return ok
+// Test whether all values are in a set.
+func (s Set) In(values ...string) bool {
+  for _, v := range values {
+    if _, ok := s[v]; !ok {
+      return false
+    }
+  }
+  return true
+}
+
+// Test whether any of the values are in a set.
+func (s Set) Any(values ...string) bool {
+  for _, v := range values {
+    if _, ok := s[v]; ok {
+      return true
+    }
+  }
+  return false
+}
+
+// Test whether a set is empty.
+func (s Set) Empty() bool {
+  return len(s) == 0
+}
+
+// Get the length of the set.
+func (s Set) Len() int {
+  return len(s)
 }
 
 // Union will do an in-place union of s and t.
@@ -43,29 +72,6 @@ func (s Set) Difference(t Set) {
 // Intersection will do an in-place intersection of t and s.
 func (s Set) Intersection(t Set) {
   for v, _ := range s {
-    if !t.In(v) {
-      delete(s, v)
-    }
-  }
-}
-
-// UnionL will do an in-place union of s and t, where t is a slice of strings.
-func (s Set) UnionL(t []string) {
-  for _, v := range t {
-    s[v] = true
-  }
-}
-
-// DifferenceL will do an in-place difference of t from s, where t is a slice of strings.
-func (s Set) DifferenceL(t []string) {
-  for _, v := range t {
-    delete(s, v)
-  }
-}
-
-// IntersectionL will do an in-place intersection of t and s, where t is a slice of strings.
-func (s Set) IntersectionL(t []string) {
-  for _, v := range s {
     if !t.In(v) {
       delete(s, v)
     }
